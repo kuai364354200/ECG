@@ -51,7 +51,7 @@ seed_everything(config.seed)
 
 
 df_ptbdb = pd.read_csv('input/heartbeat/ptbdb_abnormal.csv')
-df_mitbih = pd.read_csv('ainput/heartbeat/mitbih_train.csv')
+df_mitbih = pd.read_csv('input/heartbeat/mitbih_train.csv')
 df_ptbdb
 
 

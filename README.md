@@ -3,7 +3,7 @@
 clone from: https://www.kaggle.com/code/polomarco/ecg-classification-cnn-lstm-attention-mechanism  
 dataset：https://www.kaggle.com/code/polomarco/ecg-classification-cnn-lstm-attention-mechanism/input  
 ![1682782976501](image/README/1682782976501.png)
-![1682782991927](image/README/1682782991927.png)
+![1682783299888](image/README/1682783299888.png)
 
 用的是:  
 by using: CNN+LSTM+Attention mechanism  
