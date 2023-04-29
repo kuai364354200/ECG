@@ -246,10 +246,6 @@ class ECGDataset(Dataset):
     def __len__(self):
         return len(self.df)
 
-
-# In[ ]:
-
-
 def get_dataloader(phase: str, batch_size: int = 96) -> DataLoader:
     '''
     Dataset and DataLoader.
@@ -274,8 +270,6 @@ def get_dataloader(phase: str, batch_size: int = 96) -> DataLoader:
 
 # ![](https://64.media.tumblr.com/e42e20eb2ec1aea3962c6ace63adf499/70877119c7741403-44/s540x810/c8f722eb2ab3d92c98070554db4815ca8c01510b.png)
 
-# In[ ]:
-
 
 class Swish(nn.Module):
     def forward(self, x):
@@ -292,8 +286,6 @@ plt.plot(x.numpy(), relu_out.numpy(), label='ReLU')
 plt.legend();
 plt.show()
 
-
-# In[ ]:
 
 
 class ConvNormPool(nn.Module):
@@ -365,10 +357,6 @@ class ConvNormPool(nn.Module):
         x = self.pool(x)
         return x
 
-
-# In[ ]:
-
-
 class CNN(nn.Module):
     def __init__(
         self,
@@ -408,10 +396,6 @@ class CNN(nn.Module):
         x = F.softmax(self.fc(x), dim=1)
         return x
 
-
-# In[ ]:
-
-
 class RNN(nn.Module):
     """RNN module(cell type lstm or gru)"""
     def __init__(
@@ -447,9 +431,6 @@ class RNN(nn.Module):
     def forward(self, input):
         outputs, hidden_states = self.rnn_layer(input)
         return outputs, hidden_states
-
-
-# In[ ]:
 
 
 class RNNModel(nn.Module):
@@ -523,8 +504,6 @@ class RNNModel(nn.Module):
 # 
 # We will use Attention mechanism in ecg classification, "to clarify" to give more attention to important features, be it features from recurrent layers or convolutional.
 
-# In[ ]:
-
 
 class RNNAttentionModel(nn.Module):
     def __init__(
@@ -574,9 +553,6 @@ class RNNAttentionModel(nn.Module):
 
 # # Training Stage
 
-# In[ ]:
-
-
 class Meter:
     def __init__(self, n_classes=5):
         self.metrics = {}
@@ -612,10 +588,6 @@ class Meter:
     
     def get_confusion_matrix(self):
         return self.confusion
-
-
-# In[ ]:
-
 
 class Trainer:
     def __init__(self, net, lr, batch_size, num_epochs):
@@ -692,24 +664,12 @@ class Trainer:
             #clear_output()
         
 
-
-# In[ ]:
-
-
 #model = RNNAttentionModel(1, 64, 'lstm', False)
 #model = RNNModel(1, 64, 'lstm', True)
 model = CNN(num_classes=5, hid_size=128)
 
-
-# In[ ]:
-
-
 trainer = Trainer(net=model, lr=1e-3, batch_size=96, num_epochs=10)#100)
 trainer.run()
-
-
-# In[ ]:
-
 
 train_logs = trainer.train_df_logs
 train_logs.columns = ["train_"+ colname for colname in train_logs.columns]
@@ -731,9 +691,6 @@ logs.to_csv('cnn.csv', index=False)
 
 # # Experiments and Results
 
-# In[ ]:
-
-
 cnn_model = CNN(num_classes=5, hid_size=128).to(config.device)
 cnn_model.load_state_dict(
     torch.load(config.cnn_state_path,
@@ -741,9 +698,6 @@ cnn_model.load_state_dict(
 );
 cnn_model.eval();
 logs = pd.read_csv(config.cnn_logs)
-
-
-# In[ ]:
 
 
 colors = ['#C042FF', '#03C576FF', '#FF355A', '#03C5BF', '#96C503', '#C5035B']
@@ -779,10 +733,6 @@ lstm_model.load_state_dict(
 lstm_model.eval();
 logs = pd.read_csv(config.lstm_logs)
 
-
-# In[ ]:
-
-
 colors = ['#C042FF', '#03C576FF', '#FF355A', '#03C5BF', '#96C503', '#C5035B']
 palettes = [sns.color_palette(colors, 2),
             sns.color_palette(colors, 4), 
@@ -805,9 +755,6 @@ fig.savefig("lstm.png", format="png",  pad_inches=0.2, transparent=False, bbox_i
 fig.savefig("lstm.svg", format="svg",  pad_inches=0.2, transparent=False, bbox_inches='tight')
 
 
-# In[ ]:
-
-
 attn_model = RNNAttentionModel(1, 64, 'lstm', False).to(config.device)
 attn_model.load_state_dict(
     torch.load(config.attn_state_path,
@@ -815,9 +762,6 @@ attn_model.load_state_dict(
 );
 attn_model.eval();
 logs = pd.read_csv(config.attn_logs)
-
-
-# In[ ]:
 
 
 colors = ['#C042FF', '#03C576FF', '#FF355A', '#03C5BF', '#96C503', '#C5035B']
@@ -844,16 +788,10 @@ fig.savefig("attn.svg", format="svg",  pad_inches=0.2, transparent=False, bbox_i
 
 # ## Experiments and Results for Test Stage
 
-# In[ ]:
-
-
 test_df = pd.read_csv(config.test_csv_path)
 print(test_df.shape)
 test_dataset = ECGDataset(test_df)
 test_dataloader = DataLoader(dataset=test_dataset, batch_size=96, num_workers=0, shuffle=False)
-
-
-# In[ ]:
 
 
 def make_test_stage(dataloader, model, probs=False):
@@ -877,24 +815,13 @@ def make_test_stage(dataloader, model, probs=False):
     ground_truths_cls = torch.cat(cls_ground_truths).numpy()
     return predictions_cls, ground_truths_cls
 
-
-# In[ ]:
-
-
 models = [cnn_model, lstm_model, attn_model]
 
 
 # ### cnn model report
 
-# In[ ]:
-
-
 y_pred, y_true = make_test_stage(test_dataloader, models[0])
 y_pred.shape, y_true.shape
-
-
-# In[ ]:
-
 
 report = pd.DataFrame(
     classification_report(
@@ -903,9 +830,6 @@ report = pd.DataFrame(
         output_dict=True
     )
 ).transpose()
-
-
-# In[ ]:
 
 
 colors = ['#00FA9A', '#D2B48C', '#FF69B4']#random.choices(list(mcolors.CSS4_COLORS.values()), k = 3)
@@ -935,15 +859,8 @@ plt.show()
 
 # ### cnn+lstm model report
 
-# In[ ]:
-
-
 y_pred, y_true = make_test_stage(test_dataloader, models[1])
 y_pred.shape, y_true.shape
-
-
-# In[ ]:
-
 
 report = pd.DataFrame(
     classification_report(
@@ -952,10 +869,6 @@ report = pd.DataFrame(
         output_dict=True
     )
 ).transpose()
-
-
-# In[ ]:
-
 
 colors = ['#00FA9A', '#D2B48C', '#FF69B4']#random.choices(list(mcolors.CSS4_COLORS.values()), k = 3)
 report_plot = report.apply(lambda x: x*100)
@@ -984,14 +897,8 @@ plt.show()
 
 # ### cnn+lstm+attention model report
 
-# In[ ]:
-
-
 y_pred, y_true = make_test_stage(test_dataloader, models[2])
 y_pred.shape, y_true.shape
-
-
-# In[ ]:
 
 
 report = pd.DataFrame(
@@ -1001,9 +908,6 @@ report = pd.DataFrame(
         output_dict=True
     )
 ).transpose()
-
-
-# In[ ]:
 
 
 colors = ['#00FA9A', '#D2B48C', '#FF69B4']#random.choices(list(mcolors.CSS4_COLORS.values()), k = 3)
@@ -1033,19 +937,12 @@ plt.show()
 
 # ### Ensemble of all models
 
-# In[ ]:
-
-
 y_pred = np.zeros((y_pred.shape[0], 5), dtype=np.float32)
 for i, model in enumerate(models, 1):
     y_pred_, y_true = make_test_stage(test_dataloader, model, True)
     y_pred += y_pred_
 y_pred /= i
 y_pred = np.argmax(y_pred, axis=1)
-
-
-# In[ ]:
-
 
 clf_report = classification_report(y_pred, 
                                    y_true,
@@ -1061,9 +958,6 @@ ax.set_yticklabels(ax.get_yticklabels(),fontsize=12, rotation=0)
 plt.title("Ensemble Classification Report", fontsize=20)
 plt.savefig(f"ensemble result.svg",format="svg",bbox_inches='tight', pad_inches=0.2)
 plt.savefig(f"ensemble result.png", format="png",bbox_inches='tight', pad_inches=0.2)
-
-
-# In[ ]:
 
 
 clf_report
