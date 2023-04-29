@@ -205,16 +205,10 @@ with plt.style.context("seaborn-white"):
     plt.savefig(f"signals_per_class.png", 
                     format="png",bbox_inches='tight', pad_inches=0.2) 
 
-
-# In[ ]:
-
-
 #get_ipython().run_cell_magic('time', '', "signals = [' '.join(df_mitbih.iloc[i, :-1].apply(str).values) for i in range(df_mitbih.shape[0])]\ny = df_mitbih.iloc[:, -1].values.tolist()\nprint(len(signals), len(y))\n\nprint(f'data has {len(set([sig for line in signals for sig in line.split()]))} out of 16 372 411 unique values.')")
 
 
 # ## Dataset and DataLoader
-
-# In[ ]:
 
 
 class ECGDataset(Dataset):
@@ -253,8 +247,6 @@ def get_dataloader(phase: str, batch_size: int = 96) -> DataLoader:
 
 
 # # Models
-
-# ![](https://64.media.tumblr.com/e42e20eb2ec1aea3962c6ace63adf499/70877119c7741403-44/s540x810/c8f722eb2ab3d92c98070554db4815ca8c01510b.png)
 
 
 class Swish(nn.Module):
