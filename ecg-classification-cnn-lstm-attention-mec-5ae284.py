@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
-
-
 import os
 import itertools
 import time
@@ -31,9 +25,6 @@ from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.metrics import accuracy_score, auc, f1_score, precision_score, recall_score
 
 
-# In[ ]:
-
-
 class Config:
     csv_path = ''
     seed = 2021
@@ -59,15 +50,10 @@ config = Config()
 seed_everything(config.seed)
 
 
-# In[ ]:
-
-
 df_ptbdb = pd.read_csv('input/heartbeat/ptbdb_abnormal.csv')
 df_mitbih = pd.read_csv('ainput/heartbeat/mitbih_train.csv')
 df_ptbdb
 
-
-# In[ ]:
 
 
 df_mitbih_train = pd.read_csv('input/heartbeat/mitbih_train.csv', header=None)
